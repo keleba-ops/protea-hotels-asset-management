@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Package, Shirt, Tv, ShoppingBag, AlertTriangle, ArrowLeftRight } from "lucide-react";
 import { prisma } from "@/lib/db";
 import StatCard from "@/components/dashboard/StatCard";
