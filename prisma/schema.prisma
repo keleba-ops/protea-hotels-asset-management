@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("HOUSEKEEPER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movements  Movement[]
+  stockTakes StockTake[]
+  alerts     Alert[]
+}
+
+model Asset {
+  id           String    @id @default(cuid())
+  name         String
+  code         String    @unique
+  category     String
+  subcategory  String?
+  description  String?
+  status       String    @default("AVAILABLE")
+  condition    String    @default("GOOD")
+  location     String
+  quantity     Int       @default(1)
+  parLevel     Int?
+  unit         String    @default("pcs")
+  supplier     String?
+  purchaseDate DateTime?
+  expiryDate   DateTime?
+  cost         Float?
+  imageUrl     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  movements      Movement[]
+  stockTakeItems StockTakeItem[]
+  alerts         Alert[]
+}
+
+model Movement {
+  id           String   @id @default(cuid())
+  assetId      String
+  userId       String
+  type         String
+  fromLocation String?
+  toLocation   String
+  quantity     Int      @default(1)
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  asset Asset @relation(fields: [assetId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+}
+
+model StockTake {
+  id          String    @id @default(cuid())
+  userId      String
+  location    String?
+  status      String    @default("IN_PROGRESS")
+  notes       String?
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user  User            @relation(fields: [userId], references: [id])
+  items StockTakeItem[]
+}
+
+model StockTakeItem {
+  id          String @id @default(cuid())
+  stockTakeId String
+  assetId     String
+  expected    Int
+  counted     Int
+  variance    Int
+
+  stockTake StockTake @relation(fields: [stockTakeId], references: [id])
+  asset     Asset     @relation(fields: [assetId], references: [id])
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  assetId   String?
+  userId    String?
+  type      String
+  message   String
+  resolved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  asset Asset? @relation(fields: [assetId], references: [id])
+  user  User?  @relation(fields: [userId], references: [id])
+}
