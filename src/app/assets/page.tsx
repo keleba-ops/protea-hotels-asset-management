@@ -7,6 +7,7 @@ import { STATUS_LABELS, CATEGORY_LABELS } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { Package, Plus } from "lucide-react";
 import Link from "next/link";
+import { demoAssets } from "@/lib/demo-data";
 
 const statusColors: Record<string, string> = {
   AVAILABLE: "bg-green-100 text-green-700",
@@ -23,14 +24,24 @@ export default async function AssetsPage({
   searchParams: Promise<{ category?: string; status?: string; q?: string }>;
 }) {
   const params = await searchParams;
-  const assets = await prisma.asset.findMany({
-    where: {
-      ...(params.category ? { category: params.category } : {}),
-      ...(params.status ? { status: params.status } : {}),
-      ...(params.q ? { name: { contains: params.q } } : {}),
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+  let assets: typeof demoAssets;
+  let isDemo = false;
+
+  try {
+    assets = await prisma.asset.findMany({
+      where: {
+        ...(params.category ? { category: params.category } : {}),
+        ...(params.status ? { status: params.status } : {}),
+        ...(params.q ? { name: { contains: params.q } } : {}),
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch {
+    assets = demoAssets.filter((a) =>
+      params.category ? a.category === params.category : true
+    );
+    isDemo = true;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -38,9 +49,14 @@ export default async function AssetsPage({
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Assets" subtitle={`${assets.length} total assets`} />
         <div className="p-6 space-y-4">
-          {/* Filter bar */}
+          {isDemo && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <strong>Demo mode</strong> — showing sample data.
+            </div>
+          )}
+
           <div className="flex flex-wrap items-center gap-2">
-            {["", "LINEN", "ELECTRONIC", "CONSUMABLE"].map((cat) => (
+            {(["", "LINEN", "ELECTRONIC", "CONSUMABLE"] as const).map((cat) => (
               <Link
                 key={cat}
                 href={cat ? `/assets?category=${cat}` : "/assets"}
@@ -50,7 +66,7 @@ export default async function AssetsPage({
                     : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
                 }`}
               >
-                {cat ? CATEGORY_LABELS[cat as keyof typeof CATEGORY_LABELS] : "All"}
+                {cat ? CATEGORY_LABELS[cat] : "All"}
               </Link>
             ))}
             <div className="ml-auto">
@@ -64,12 +80,11 @@ export default async function AssetsPage({
             </div>
           </div>
 
-          {/* Assets table */}
           <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
             {assets.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-16">
                 <Package className="h-10 w-10 text-gray-300" />
-                <p className="text-sm text-gray-400">No assets found. Add your first asset to get started.</p>
+                <p className="text-sm text-gray-400">No assets found.</p>
               </div>
             ) : (
               <table className="w-full text-sm">

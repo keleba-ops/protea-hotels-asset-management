@@ -6,67 +6,72 @@ import StatCard from "@/components/dashboard/StatCard";
 import RecentMovements from "@/components/dashboard/RecentMovements";
 import AlertsList from "@/components/dashboard/AlertsList";
 import TopBar from "@/components/layout/TopBar";
+import { demoMovements, demoAlerts, demoCounts } from "@/lib/demo-data";
 
 async function getDashboardData() {
-  const [
-    totalAssets,
-    linens,
-    electronics,
-    consumables,
-    lostAssets,
-    lowStockCount,
-    recentMovements,
-    activeAlerts,
-  ] = await Promise.all([
-    prisma.asset.count(),
-    prisma.asset.count({ where: { category: "LINEN" } }),
-    prisma.asset.count({ where: { category: "ELECTRONIC" } }),
-    prisma.asset.count({ where: { category: "CONSUMABLE" } }),
-    prisma.asset.count({ where: { status: "LOST" } }),
-    prisma.alert.count({ where: { type: "LOW_STOCK", resolved: false } }),
-    prisma.movement.findMany({
-      take: 8,
-      orderBy: { createdAt: "desc" },
-      include: { asset: true, user: true },
-    }),
-    prisma.alert.findMany({
-      where: { resolved: false },
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      include: { asset: true },
-    }),
-  ]);
-
-  return { totalAssets, linens, electronics, consumables, lostAssets, lowStockCount, recentMovements, activeAlerts };
+  try {
+    const [total, linens, electronics, consumables, lost, lowStock, movements, alerts] =
+      await Promise.all([
+        prisma.asset.count(),
+        prisma.asset.count({ where: { category: "LINEN" } }),
+        prisma.asset.count({ where: { category: "ELECTRONIC" } }),
+        prisma.asset.count({ where: { category: "CONSUMABLE" } }),
+        prisma.asset.count({ where: { status: "LOST" } }),
+        prisma.alert.count({ where: { type: "LOW_STOCK", resolved: false } }),
+        prisma.movement.findMany({
+          take: 8,
+          orderBy: { createdAt: "desc" },
+          include: { asset: true, user: true },
+        }),
+        prisma.alert.findMany({
+          where: { resolved: false },
+          take: 6,
+          orderBy: { createdAt: "desc" },
+          include: { asset: true },
+        }),
+      ]);
+    return { counts: { total, linens, electronics, consumables, lost, lowStock, movementsToday: movements.length, activeAlerts: alerts.length }, movements, alerts, demo: false };
+  } catch {
+    return {
+      counts: demoCounts,
+      movements: demoMovements as never,
+      alerts: demoAlerts as never,
+      demo: true,
+    };
+  }
 }
 
 export default async function DashboardPage() {
-  const data = await getDashboardData();
+  const { counts, movements, alerts, demo } = await getDashboardData();
 
   return (
     <div className="flex flex-col">
       <TopBar title="Dashboard" subtitle="Mariot Hotel — Asset Overview" />
 
       <div className="p-6 space-y-6">
-        {/* Stat cards */}
+        {demo && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <strong>Demo mode</strong> — showing sample data. Connect a database to track live hotel assets.
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatCard label="Total Assets" value={data.totalAssets} icon={Package} color="blue" />
-          <StatCard label="Linens" value={data.linens} icon={Shirt} color="purple" />
-          <StatCard label="Electronics" value={data.electronics} icon={Tv} color="green" />
-          <StatCard label="Consumables" value={data.consumables} icon={ShoppingBag} color="amber" />
+          <StatCard label="Total Assets" value={counts.total} icon={Package} color="blue" />
+          <StatCard label="Linens" value={counts.linens} icon={Shirt} color="purple" />
+          <StatCard label="Electronics" value={counts.electronics} icon={Tv} color="green" />
+          <StatCard label="Consumables" value={counts.consumables} icon={ShoppingBag} color="amber" />
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatCard label="Lost / Missing" value={data.lostAssets} icon={AlertTriangle} color="red" />
-          <StatCard label="Low Stock Alerts" value={data.lowStockCount} icon={AlertTriangle} color="amber" />
-          <StatCard label="Movements Today" value={data.recentMovements.length} icon={ArrowLeftRight} color="blue" />
-          <StatCard label="Active Alerts" value={data.activeAlerts.length} icon={AlertTriangle} color="red" />
+          <StatCard label="Lost / Missing" value={counts.lost} icon={AlertTriangle} color="red" />
+          <StatCard label="Low Stock Alerts" value={counts.lowStock} icon={AlertTriangle} color="amber" />
+          <StatCard label="Movements Today" value={counts.movementsToday} icon={ArrowLeftRight} color="blue" />
+          <StatCard label="Active Alerts" value={counts.activeAlerts} icon={AlertTriangle} color="red" />
         </div>
 
-        {/* Recent activity */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <RecentMovements movements={data.recentMovements} />
-          <AlertsList alerts={data.activeAlerts} />
+          <RecentMovements movements={movements} />
+          <AlertsList alerts={alerts} />
         </div>
       </div>
     </div>

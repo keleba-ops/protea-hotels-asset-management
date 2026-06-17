@@ -6,6 +6,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import { MOVEMENT_LABELS } from "@/types";
 import { formatDateTime } from "@/lib/utils";
 import { ArrowLeftRight } from "lucide-react";
+import { demoMovements } from "@/lib/demo-data";
 
 const typeColors: Record<string, string> = {
   CHECK_OUT: "bg-blue-100 text-blue-700",
@@ -19,11 +20,19 @@ const typeColors: Record<string, string> = {
 };
 
 export default async function TrackingPage() {
-  const movements = await prisma.movement.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 50,
-    include: { asset: true, user: true },
-  });
+  let movements;
+  let isDemo = false;
+
+  try {
+    movements = await prisma.movement.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: { asset: true, user: true },
+    });
+  } catch {
+    movements = demoMovements;
+    isDemo = true;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
@@ -31,6 +40,11 @@ export default async function TrackingPage() {
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Movement Log" subtitle="Asset check-in / check-out history" />
         <div className="p-6">
+          {isDemo && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              <strong>Demo mode</strong> — showing sample data.
+            </div>
+          )}
           <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
             {movements.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-16">
