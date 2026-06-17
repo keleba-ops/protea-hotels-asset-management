@@ -12,7 +12,7 @@ interface AlertsListProps {
 const alertColors: Record<string, string> = {
   LOW_STOCK: "text-amber-600 bg-amber-50",
   ITEM_LOST: "text-red-600 bg-red-50",
-  MAINTENANCE_DUE: "text-blue-600 bg-blue-50",
+  MAINTENANCE_DUE: "text-navy-600 bg-navy-50",
   EXPIRY_SOON: "text-orange-600 bg-orange-50",
   HIGH_VARIANCE: "text-purple-600 bg-purple-50",
 };

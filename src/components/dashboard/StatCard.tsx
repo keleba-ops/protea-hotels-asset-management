@@ -10,7 +10,7 @@ interface StatCardProps {
 }
 
 const colorMap = {
-  blue:   { bg: "bg-blue-50",   icon: "bg-blue-100 text-blue-600",   text: "text-blue-600" },
+  blue:   { bg: "bg-navy-50",   icon: "bg-navy-100 text-navy-600",   text: "text-navy-600" },
   green:  { bg: "bg-green-50",  icon: "bg-green-100 text-green-600", text: "text-green-600" },
   amber:  { bg: "bg-amber-50",  icon: "bg-amber-100 text-amber-600", text: "text-amber-600" },
   red:    { bg: "bg-red-50",    icon: "bg-red-100 text-red-600",     text: "text-red-600" },

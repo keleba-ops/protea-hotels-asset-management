@@ -70,7 +70,7 @@ export default function Sidebar() {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                     active
-                      ? "bg-blue-50 text-blue-700"
+                      ? "bg-navy-50 text-navy-600"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   )}
                 >

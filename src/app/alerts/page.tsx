@@ -11,7 +11,7 @@ import { demoAlerts } from "@/lib/demo-data";
 const alertColors: Record<string, string> = {
   LOW_STOCK: "bg-amber-100 text-amber-700 border-amber-200",
   ITEM_LOST: "bg-red-100 text-red-700 border-red-200",
-  MAINTENANCE_DUE: "bg-blue-100 text-blue-700 border-blue-200",
+  MAINTENANCE_DUE: "bg-navy-100 text-navy-700 border-navy-200",
   EXPIRY_SOON: "bg-orange-100 text-orange-700 border-orange-200",
   HIGH_VARIANCE: "bg-purple-100 text-purple-700 border-purple-200",
 };

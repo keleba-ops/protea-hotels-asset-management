@@ -20,7 +20,7 @@ export default function TopBar({ title, subtitle }: TopBarProps) {
           <input
             type="text"
             placeholder="Search assets..."
-            className="h-9 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="h-9 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-navy-500 focus:outline-none focus:ring-1 focus:ring-navy-500"
           />
         </div>
         <button className="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100">

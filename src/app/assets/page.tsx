@@ -11,7 +11,7 @@ import { demoAssets } from "@/lib/demo-data";
 
 const statusColors: Record<string, string> = {
   AVAILABLE: "bg-green-100 text-green-700",
-  IN_USE: "bg-blue-100 text-blue-700",
+  IN_USE: "bg-navy-100 text-navy-700",
   IN_LAUNDRY: "bg-purple-100 text-purple-700",
   IN_MAINTENANCE: "bg-amber-100 text-amber-700",
   LOST: "bg-red-100 text-red-700",
@@ -63,7 +63,7 @@ export default async function AssetsPage({
                 href={cat ? `/assets?category=${cat}` : "/assets"}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                   params.category === cat || (!params.category && cat === "")
-                    ? "bg-blue-600 text-white"
+                    ? "bg-navy-600 text-white"
                     : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
                 }`}
               >
@@ -73,7 +73,7 @@ export default async function AssetsPage({
             <div className="ml-auto">
               <Link
                 href="/assets/new"
-                className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                className="flex items-center gap-2 rounded-lg bg-navy-600 px-4 py-2 text-sm font-medium text-white hover:bg-navy-700"
               >
                 <Plus className="h-4 w-4" />
                 Add Asset

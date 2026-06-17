@@ -9,7 +9,7 @@ import { ArrowLeftRight } from "lucide-react";
 import { demoMovements } from "@/lib/demo-data";
 
 const typeColors: Record<string, string> = {
-  CHECK_OUT: "bg-blue-100 text-blue-700",
+  CHECK_OUT: "bg-navy-100 text-navy-700",
   CHECK_IN: "bg-green-100 text-green-700",
   LAUNDRY_OUT: "bg-purple-100 text-purple-700",
   LAUNDRY_IN: "bg-indigo-100 text-indigo-700",
