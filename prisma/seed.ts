@@ -2,32 +2,44 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+// Pre-hashed passwords (bcrypt, 10 rounds)
+// admin@mariot.co.bw  → Admin@Mariot2024
+// demo@mariot.co.bw   → Demo@Mariot2024
+const ADMIN_HASH = "$2b$10$DatFikxtpo7PBywyGRuS5eLADLW2I3YbCYYJpJsSpzCD2BzVzQXlG";
+const DEMO_HASH  = "$2b$10$w0A2nGxqcwOmxu4pzfJBMe9A1yEXKFEdEAitp.H5/Bt27.RCi9.42";
+
 async function main() {
   // ─── Users ──────────────────────────────────────────────────────────────
   const admin = await prisma.user.upsert({
     where: { email: "admin@mariot.co.bw" },
-    update: {},
-    create: { name: "Admin User", email: "admin@mariot.co.bw", password: "hashed-placeholder", role: "ADMIN" },
+    update: { password: ADMIN_HASH },
+    create: { name: "Admin User", email: "admin@mariot.co.bw", password: ADMIN_HASH, role: "ADMIN" },
+  });
+  // Demo login account
+  await prisma.user.upsert({
+    where: { email: "demo@mariot.co.bw" },
+    update: { password: DEMO_HASH },
+    create: { name: "Demo User", email: "demo@mariot.co.bw", password: DEMO_HASH, role: "MANAGER" },
   });
   const manager = await prisma.user.upsert({
     where: { email: "manager@mariot.co.bw" },
     update: {},
-    create: { name: "Thabo Molefe", email: "manager@mariot.co.bw", password: "hashed-placeholder", role: "MANAGER" },
+    create: { name: "Thabo Molefe", email: "manager@mariot.co.bw", password: ADMIN_HASH, role: "MANAGER" },
   });
   const housekeeper = await prisma.user.upsert({
     where: { email: "housekeeper@mariot.co.bw" },
     update: {},
-    create: { name: "Keamo Setlhabi", email: "housekeeper@mariot.co.bw", password: "hashed-placeholder", role: "HOUSEKEEPER" },
+    create: { name: "Keamo Setlhabi", email: "housekeeper@mariot.co.bw", password: ADMIN_HASH, role: "HOUSEKEEPER" },
   });
   const laundry = await prisma.user.upsert({
     where: { email: "laundry@mariot.co.bw" },
     update: {},
-    create: { name: "Neo Kgosi", email: "laundry@mariot.co.bw", password: "hashed-placeholder", role: "LAUNDRY_STAFF" },
+    create: { name: "Neo Kgosi", email: "laundry@mariot.co.bw", password: ADMIN_HASH, role: "LAUNDRY_STAFF" },
   });
   const storeManager = await prisma.user.upsert({
     where: { email: "store@mariot.co.bw" },
     update: {},
-    create: { name: "Lesedi Dube", email: "store@mariot.co.bw", password: "hashed-placeholder", role: "STORE_MANAGER" },
+    create: { name: "Lesedi Dube", email: "store@mariot.co.bw", password: ADMIN_HASH, role: "STORE_MANAGER" },
   });
 
   // ─── Linen Assets ──────────────────────────────────────────────────────
