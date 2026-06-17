@@ -24,7 +24,8 @@ export default async function AssetsPage({
   searchParams: Promise<{ category?: string; status?: string; q?: string }>;
 }) {
   const params = await searchParams;
-  let assets: typeof demoAssets;
+  type AssetRow = { id: string; name: string; code: string; category: string; status: string; condition: string; location: string; quantity: number; parLevel: number | null; unit: string; updatedAt: Date };
+  let assets: AssetRow[];
   let isDemo = false;
 
   try {
