@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Package, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 const DEMO_ACCOUNTS = [
   { label: "Admin", email: "admin@mariot.co.bw", password: "Admin@Mariot2024", role: "Full access" },
@@ -48,14 +49,16 @@ export default function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 shadow-lg">
-            <Package className="h-8 w-8 text-white" />
-          </div>
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900">Mariot Assets</h1>
-            <p className="mt-1 text-sm text-gray-500">Hotel Asset Management System</p>
-          </div>
+        <div className="mb-8 flex flex-col items-center gap-4">
+          <Image
+            src="/Protealogo.png"
+            alt="Protea Hotel by Marriott"
+            width={220}
+            height={80}
+            className="object-contain"
+            priority
+          />
+          <p className="text-sm text-gray-500">Asset Management System</p>
         </div>
 
         {/* Card */}
@@ -72,7 +75,7 @@ export default function LoginForm() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@mariot.co.bw"
+                placeholder="you@proteabw.co.bw"
                 className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
@@ -46,14 +47,15 @@ export default function Sidebar() {
   return (
     <aside className="flex h-screen w-64 flex-col border-r border-gray-200 bg-white">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-gray-200 px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
-          <Package className="h-5 w-5 text-white" />
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-gray-900">Mariot Assets</p>
-          <p className="text-xs text-gray-500">Asset Management</p>
-        </div>
+      <div className="flex h-20 items-center border-b border-gray-200 px-4">
+        <Image
+          src="/Protealogo.png"
+          alt="Protea Hotel by Marriott"
+          width={180}
+          height={60}
+          className="object-contain"
+          priority
+        />
       </div>
 
       {/* Navigation */}

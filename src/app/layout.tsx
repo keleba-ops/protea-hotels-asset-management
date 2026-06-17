@@ -6,7 +6,7 @@ import "./globals.css";
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mariot Asset Management",
+  title: "Protea Hotel by Marriott — Asset Management",
   description: "Hotel asset tracking and inventory management system",
 };
 

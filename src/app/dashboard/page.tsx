@@ -46,7 +46,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="flex flex-col">
-      <TopBar title="Dashboard" subtitle="Mariot Hotel — Asset Overview" />
+      <TopBar title="Dashboard" subtitle="Protea Hotel by Marriott — Asset Overview" />
 
       <div className="p-6 space-y-6">
         {demo && (
