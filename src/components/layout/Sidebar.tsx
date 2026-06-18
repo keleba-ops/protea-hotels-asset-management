@@ -50,11 +50,12 @@ export default function Sidebar() {
       <div className="flex h-20 items-center border-b border-gray-200 px-4">
         <Image
           src="/Protealogo.png"
-          alt="Protea Hotel by Marriott"
+          alt="Protea Hotels by Marriott"
           width={180}
-          height={60}
+          height={79}
           className="object-contain"
           priority
+          unoptimized
         />
       </div>
 

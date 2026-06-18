@@ -68,14 +68,15 @@ export default function LoginPage() {
         <div className="relative z-10 flex h-full flex-col px-10 py-10">
 
           {/* Logo on white card */}
-          <div className="w-fit rounded-xl bg-white px-5 py-3 shadow-lg">
+          <div className="w-fit rounded-xl bg-white px-6 py-4 shadow-lg">
             <Image
               src="/Protealogo.png"
               alt="Protea Hotels by Marriott"
-              width={160}
-              height={52}
+              width={180}
+              height={79}
               className="object-contain"
               priority
+              unoptimized
             />
           </div>
 
@@ -131,9 +132,10 @@ export default function LoginPage() {
             src="/Protealogo.png"
             alt="Protea Hotels by Marriott"
             width={180}
-            height={60}
+            height={79}
             className="object-contain"
             priority
+            unoptimized
           />
         </div>
 
