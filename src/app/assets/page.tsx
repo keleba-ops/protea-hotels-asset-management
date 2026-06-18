@@ -102,8 +102,12 @@ export default async function AssetsPage({
                 </thead>
                 <tbody className="divide-y divide-gray-50">
                   {assets.map((asset) => (
-                    <tr key={asset.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium text-gray-900">{asset.name}</td>
+                    <tr key={asset.id} className="cursor-pointer hover:bg-gray-50">
+                      <td className="px-4 py-3 font-medium text-gray-900">
+                        <Link href={`/assets/${asset.id}`} className="hover:text-navy-600 hover:underline">
+                          {asset.name}
+                        </Link>
+                      </td>
                       <td className="px-4 py-3 font-mono text-gray-500">{asset.code}</td>
                       <td className="px-4 py-3 text-gray-600">
                         {CATEGORY_LABELS[asset.category as keyof typeof CATEGORY_LABELS]}
