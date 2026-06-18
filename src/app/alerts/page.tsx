@@ -48,12 +48,6 @@ export default async function AlertsPage() {
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Alerts" subtitle={`${active.length} active · ${resolved.length} resolved`} />
         <div className="p-6 space-y-6">
-          {isDemo && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <strong>Demo mode</strong> — showing sample data.
-            </div>
-          )}
-
           <section>
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-gray-500">Active</h2>
             {active.length === 0 ? (

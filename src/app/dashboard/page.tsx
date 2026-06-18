@@ -49,12 +49,6 @@ export default async function DashboardPage() {
       <TopBar title="Dashboard" subtitle="Protea Hotel by Marriott — Asset Overview" />
 
       <div className="p-6 space-y-6">
-        {demo && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <strong>Demo mode</strong> — showing sample data. Connect a database to track live hotel assets.
-          </div>
-        )}
-
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <StatCard label="Total Assets" value={counts.total} icon={Package} color="blue" />
           <StatCard label="Linens" value={counts.linens} icon={Shirt} color="purple" />

@@ -50,12 +50,6 @@ export default async function AssetsPage({
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Assets" subtitle={`${assets.length} total assets`} />
         <div className="p-6 space-y-4">
-          {isDemo && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <strong>Demo mode</strong> — showing sample data.
-            </div>
-          )}
-
           <div className="flex flex-wrap items-center gap-2">
             {(["", "LINEN", "ELECTRONIC", "CONSUMABLE"] as const).map((cat) => (
               <Link

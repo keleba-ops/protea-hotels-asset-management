@@ -46,11 +46,6 @@ export default async function TrackingPage() {
               <Plus className="h-4 w-4" /> Record Movement
             </Link>
           </div>
-          {isDemo && (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-              <strong>Demo mode</strong> — showing sample data.
-            </div>
-          )}
           <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
             {movements.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-16">
