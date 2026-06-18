@@ -11,6 +11,7 @@ type AssetData = {
   description: string | null; status: string; condition: string; location: string;
   quantity: number; parLevel: number | null; unit: string; supplier: string | null;
   cost: number | null; purchaseDate: Date | null; expiryDate: Date | null;
+  rfidTag: string | null;
 };
 
 const inputCls = "w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-navy-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-navy-500";
@@ -109,6 +110,15 @@ export default function AssetForm({ asset }: { asset?: AssetData | null }) {
             <input type="number" name="cost" min={0} step="0.01" defaultValue={asset?.cost ?? ""} placeholder="0.00" className={inputCls} />
           </Field>
         </div>
+      </div>
+
+      {/* Tracking */}
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm space-y-4">
+        <h2 className="font-semibold text-gray-900">Tracking</h2>
+        <Field label="RFID Tag ID">
+          <input name="rfidTag" defaultValue={asset?.rfidTag ?? ""} placeholder="e.g. E2001234560000001234ABCD" className={inputCls} />
+        </Field>
+        <p className="text-xs text-gray-400">Optional — used for automatic movement logging when asset passes an RFID checkpoint.</p>
       </div>
 
       {/* Dates */}

@@ -12,7 +12,7 @@ interface Props {
 export default function AssetQRCode({ assetId, assetName, assetCode }: Props) {
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const targetUrl = `${origin}/tracking/new?assetId=${assetId}`;
+  const targetUrl = `${origin}/scan/${assetId}`;
 
   useEffect(() => {
     // Dynamically import qrcode only on client to avoid SSR issues
@@ -80,7 +80,7 @@ export default function AssetQRCode({ assetId, assetName, assetCode }: Props) {
         <div className="flex flex-col items-center gap-3">
           <img src={qrDataUrl} alt={`QR code for ${assetCode}`} className="h-36 w-36 rounded-lg" />
           <p className="text-center text-xs text-gray-400">
-            Scan to open the movement form for this asset
+            Scan for one-tap movement recording
           </p>
           <button
             onClick={printLabel}

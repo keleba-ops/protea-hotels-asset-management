@@ -55,6 +55,7 @@ export async function createAsset(_: unknown, formData: FormData) {
         cost: parseOptionalFloat(formData.get("cost")),
         purchaseDate: parseOptionalDate(formData.get("purchaseDate")),
         expiryDate: parseOptionalDate(formData.get("expiryDate")),
+        rfidTag: (formData.get("rfidTag") as string)?.trim() || null,
       },
     });
   } catch (e: unknown) {
@@ -95,6 +96,7 @@ export async function updateAsset(_: unknown, formData: FormData) {
         cost: parseOptionalFloat(formData.get("cost")),
         purchaseDate: parseOptionalDate(formData.get("purchaseDate")),
         expiryDate: parseOptionalDate(formData.get("expiryDate")),
+        rfidTag: (formData.get("rfidTag") as string)?.trim() || null,
       },
     });
   } catch {
