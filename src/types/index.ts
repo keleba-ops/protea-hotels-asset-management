@@ -101,6 +101,7 @@ export const HOTEL_LOCATIONS = [
   "Main Store",
   "Housekeeping Store",
   "Laundry Room",
+  "Maintenance Room",
   "Reception",
   "Kitchen",
   "Restaurant",

@@ -5,8 +5,9 @@ import TopBar from "@/components/layout/TopBar";
 import Sidebar from "@/components/layout/Sidebar";
 import { MOVEMENT_LABELS } from "@/types";
 import { formatDateTime } from "@/lib/utils";
-import { ArrowLeftRight } from "lucide-react";
+import { ArrowLeftRight, Plus } from "lucide-react";
 import { demoMovements } from "@/lib/demo-data";
+import Link from "next/link";
 
 const typeColors: Record<string, string> = {
   CHECK_OUT: "bg-navy-100 text-navy-700",
@@ -39,9 +40,14 @@ export default async function TrackingPage() {
       <Sidebar />
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Movement Log" subtitle="Asset check-in / check-out history" />
-        <div className="p-6">
+        <div className="p-6 space-y-4">
+          <div className="flex justify-end">
+            <Link href="/tracking/new" className="flex items-center gap-2 rounded-lg bg-navy-600 px-4 py-2 text-sm font-medium text-white hover:bg-navy-700">
+              <Plus className="h-4 w-4" /> Record Movement
+            </Link>
+          </div>
           {isDemo && (
-            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
               <strong>Demo mode</strong> — showing sample data.
             </div>
           )}

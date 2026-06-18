@@ -7,6 +7,8 @@ import { ALERT_LABELS } from "@/types";
 import { formatDateTime } from "@/lib/utils";
 import { Bell, CheckCircle } from "lucide-react";
 import { demoAlerts } from "@/lib/demo-data";
+import { resolveAlert } from "@/app/actions/alerts";
+import { SubmitButton } from "@/components/ui/SubmitButton";
 
 const alertColors: Record<string, string> = {
   LOW_STOCK: "bg-amber-100 text-amber-700 border-amber-200",
@@ -79,6 +81,12 @@ export default async function AlertsPage() {
                       <p className="mt-0.5 text-sm">{alert.message}</p>
                       <p className="mt-1 text-xs opacity-60">{formatDateTime(alert.createdAt)}</p>
                     </div>
+                    {!isDemo && (
+                      <form action={resolveAlert} className="shrink-0">
+                        <input type="hidden" name="id" value={alert.id} />
+                        <SubmitButton className="py-1.5 text-xs">Resolve</SubmitButton>
+                      </form>
+                    )}
                   </div>
                 ))}
               </div>

@@ -84,7 +84,7 @@ export default function Sidebar() {
       </nav>
 
       {/* User footer */}
-      <div className="border-t border-gray-200 p-4">
+      <div className="border-t border-gray-200 p-4 space-y-3">
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-gray-900">
@@ -102,6 +102,10 @@ export default function Sidebar() {
             <LogOut className="h-4 w-4" />
           </button>
         </div>
+        <p className="text-center text-[10px] leading-tight text-gray-400">
+          Developed by{" "}
+          <span className="font-medium text-gray-500">i-Centric Technologies</span>
+        </p>
       </div>
     </aside>
   );

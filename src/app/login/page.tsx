@@ -110,9 +110,15 @@ export default function LoginPage() {
           </div>
 
           {/* Footer */}
-          <p className="text-xs text-navy-500">
-            © {new Date().getFullYear()} Protea Hotels by Marriott. All rights reserved.
-          </p>
+          <div className="space-y-1">
+            <p className="text-xs text-navy-500">
+              © {new Date().getFullYear()} Protea Hotels by Marriott. All rights reserved.
+            </p>
+            <p className="text-xs text-navy-600/50">
+              System developed by{" "}
+              <span className="font-semibold text-navy-400">i-Centric Technologies</span>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -144,6 +150,11 @@ export default function LoginPage() {
 
           <LoginForm />
         </div>
+
+        <p className="mt-10 text-center text-xs text-gray-400">
+          System developed by{" "}
+          <span className="font-medium text-gray-500">i-Centric Technologies</span>
+        </p>
       </div>
 
     </main>
