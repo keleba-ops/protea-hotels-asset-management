@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { HOTEL_LOCATIONS } from "@/types";
 
 const STATUS_FOR_TYPE: Record<string, string> = {
   CHECK_OUT: "IN_USE",
@@ -12,6 +13,9 @@ const STATUS_FOR_TYPE: Record<string, string> = {
   MAINTENANCE: "IN_MAINTENANCE",
   TRANSFER: "AVAILABLE",
 };
+
+const ALLOWED_TYPES = new Set(Object.keys(STATUS_FOR_TYPE));
+const ALLOWED_LOCATIONS = new Set<string>(HOTEL_LOCATIONS);
 
 export async function confirmScan(
   _: unknown,
@@ -26,6 +30,10 @@ export async function confirmScan(
   const quantity = parseInt(formData.get("quantity") as string) || 1;
 
   if (!assetId || !type || !toLocation) return { error: "Missing required fields." };
+
+  // Allowlist validation — reject any value not in the pre-defined sets
+  if (!ALLOWED_TYPES.has(type)) return { error: "Invalid movement type." };
+  if (!ALLOWED_LOCATIONS.has(toLocation)) return { error: "Invalid destination." };
 
   const asset = await prisma.asset.findUnique({ where: { id: assetId } });
   if (!asset) return { error: "Asset not found." };
