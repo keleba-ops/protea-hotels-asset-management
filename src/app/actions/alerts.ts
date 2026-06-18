@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 
 export async function resolveAlert(formData: FormData): Promise<void> {
   const session = await auth();
-  if (!session) return;
+  if (!session || !["ADMIN", "MANAGER", "STORE_MANAGER"].includes(session.user.role)) return;
 
   const id = formData.get("id") as string;
   await prisma.alert.update({ where: { id }, data: { resolved: true } }).catch(() => null);

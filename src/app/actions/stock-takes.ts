@@ -102,6 +102,10 @@ export async function cancelStockTake(formData: FormData): Promise<void> {
   if (!session) return;
 
   const id = formData.get("id") as string;
+  const st = await prisma.stockTake.findUnique({ where: { id }, select: { userId: true } });
+  const isAdminOrManager = ["ADMIN", "MANAGER"].includes(session.user.role);
+  if (!st || (st.userId !== session.user.id && !isAdminOrManager)) return;
+
   await prisma.stockTake.update({ where: { id }, data: { status: "CANCELLED" } }).catch(() => null);
 
   revalidatePath("/stock-takes");

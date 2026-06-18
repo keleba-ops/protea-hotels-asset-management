@@ -22,9 +22,11 @@ function parseOptionalDate(val: FormDataEntryValue | null) {
   return val ? new Date(val as string) : null;
 }
 
+const ASSET_ROLES = ["ADMIN", "MANAGER", "STORE_MANAGER"];
+
 export async function createAsset(_: unknown, formData: FormData) {
   const session = await auth();
-  if (!session) return { error: "Unauthorized." };
+  if (!session || !ASSET_ROLES.includes(session.user.role)) return { error: "Forbidden." };
 
   const name = (formData.get("name") as string)?.trim();
   const category = formData.get("category") as string;
@@ -66,7 +68,7 @@ export async function createAsset(_: unknown, formData: FormData) {
 
 export async function updateAsset(_: unknown, formData: FormData) {
   const session = await auth();
-  if (!session) return { error: "Unauthorized." };
+  if (!session || !ASSET_ROLES.includes(session.user.role)) return { error: "Forbidden." };
 
   const id = formData.get("id") as string;
   const name = (formData.get("name") as string)?.trim();
@@ -107,7 +109,7 @@ export async function updateAsset(_: unknown, formData: FormData) {
 
 export async function deleteAsset(formData: FormData): Promise<void> {
   const session = await auth();
-  if (!session) return;
+  if (!session || !["ADMIN", "MANAGER"].includes(session.user.role)) return;
 
   const id = formData.get("id") as string;
 
