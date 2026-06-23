@@ -5,7 +5,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import { CATEGORY_LABELS, STATUS_LABELS, MOVEMENT_LABELS } from "@/types";
 import { formatDate } from "@/lib/utils";
-import { Package, AlertTriangle, ArrowLeftRight, TrendingDown } from "lucide-react";
+import { Package, AlertTriangle, ArrowLeftRight, TrendingDown, Download } from "lucide-react";
 
 function Section({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
@@ -63,6 +63,23 @@ export default async function ReportsPage() {
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Reports" subtitle="Inventory summary and activity analytics" />
         <div className="p-6 space-y-8">
+
+          {/* Export buttons */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-gray-500">Export:</span>
+            <a
+              href="/api/reports/export?type=assets"
+              className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <Download className="h-3.5 w-3.5" /> Assets CSV
+            </a>
+            <a
+              href="/api/reports/export?type=movements"
+              className="flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <Download className="h-3.5 w-3.5" /> Movements CSV
+            </a>
+          </div>
 
           {/* Summary cards */}
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">

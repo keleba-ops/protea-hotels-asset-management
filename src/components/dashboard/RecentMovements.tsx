@@ -3,7 +3,7 @@ import { MOVEMENT_LABELS } from "@/types";
 import { formatDateTime } from "@/lib/utils";
 import { ArrowLeftRight } from "lucide-react";
 
-type MovementWithRelations = Movement & { asset: Asset; user: User };
+type MovementWithRelations = Movement & { asset: Asset; user: User | null };
 
 interface RecentMovementsProps {
   movements: MovementWithRelations[];
@@ -25,7 +25,7 @@ export default function RecentMovements({ movements }: RecentMovementsProps) {
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-gray-900">{m.asset.name}</p>
                 <p className="text-xs text-gray-500">
-                  {MOVEMENT_LABELS[m.type as keyof typeof MOVEMENT_LABELS]} · {m.user.name}
+                  {MOVEMENT_LABELS[m.type as keyof typeof MOVEMENT_LABELS]} · {m.user?.name ?? "System"}
                 </p>
               </div>
               <div className="ml-4 shrink-0 text-right">

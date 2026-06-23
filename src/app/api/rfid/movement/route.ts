@@ -76,7 +76,6 @@ export async function POST(req: NextRequest) {
   await prisma.movement.create({
     data: {
       assetId: asset.id,
-      userId: "system",
       type,
       fromLocation: asset.location,
       toLocation,

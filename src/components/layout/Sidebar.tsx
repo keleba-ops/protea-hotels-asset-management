@@ -16,6 +16,7 @@ import {
   Bell,
   Settings,
   LogOut,
+  Wifi,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +30,7 @@ const navItems = [
   { href: "/stock-takes", label: "Stock Takes", icon: ClipboardList },
   { href: "/reports", label: "Reports", icon: BarChart3 },
   { href: "/alerts", label: "Alerts", icon: Bell },
+  { href: "/integrations", label: "Integrations", icon: Wifi },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 

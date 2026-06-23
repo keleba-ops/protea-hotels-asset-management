@@ -5,9 +5,19 @@ import TopBar from "@/components/layout/TopBar";
 import Sidebar from "@/components/layout/Sidebar";
 import { MOVEMENT_LABELS } from "@/types";
 import { formatDateTime } from "@/lib/utils";
-import { ArrowLeftRight, Plus } from "lucide-react";
+import { ArrowLeftRight, Plus, QrCode, Wifi, Hand, Clock } from "lucide-react";
 import { demoMovements } from "@/lib/demo-data";
 import Link from "next/link";
+
+function MovementSource({ notes }: { notes: string | null }) {
+  if (notes?.includes("QR scan"))
+    return <span title="Via QR scan"><QrCode className="h-3.5 w-3.5 text-navy-500" /></span>;
+  if (notes?.includes("RFID checkpoint"))
+    return <span title="Via RFID"><Wifi className="h-3.5 w-3.5 text-green-600" /></span>;
+  if (notes?.includes("Auto-") || notes?.includes("system cron"))
+    return <span title="Automated / cron"><Clock className="h-3.5 w-3.5 text-amber-500" /></span>;
+  return <span title="Manual entry"><Hand className="h-3.5 w-3.5 text-gray-400" /></span>;
+}
 
 const typeColors: Record<string, string> = {
   CHECK_OUT: "bg-navy-100 text-navy-700",
@@ -61,6 +71,7 @@ export default async function TrackingPage() {
                     <th className="px-4 py-3 text-left font-medium text-gray-500">From</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-500">To</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-500">Qty</th>
+                    <th className="px-4 py-3 text-left font-medium text-gray-500">Via</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-500">Staff</th>
                     <th className="px-4 py-3 text-left font-medium text-gray-500">Date</th>
                   </tr>
@@ -77,7 +88,8 @@ export default async function TrackingPage() {
                       <td className="px-4 py-3 text-gray-500">{m.fromLocation ?? "—"}</td>
                       <td className="px-4 py-3 text-gray-600">{m.toLocation}</td>
                       <td className="px-4 py-3 text-gray-900">{m.quantity}</td>
-                      <td className="px-4 py-3 text-gray-600">{m.user.name}</td>
+                      <td className="px-4 py-3"><MovementSource notes={m.notes} /></td>
+                      <td className="px-4 py-3 text-gray-600">{m.user?.name ?? "System"}</td>
                       <td className="px-4 py-3 text-gray-400">{formatDateTime(m.createdAt)}</td>
                     </tr>
                   ))}

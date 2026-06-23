@@ -7,7 +7,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import TopBar from "@/components/layout/TopBar";
 import { CATEGORY_LABELS, STATUS_LABELS, MOVEMENT_LABELS } from "@/types";
 import { formatDate, formatDateTime } from "@/lib/utils";
-import { Pencil, ArrowLeft } from "lucide-react";
+import { Pencil, ArrowLeft, QrCode, Wifi, Barcode } from "lucide-react";
 import { deleteAsset } from "@/app/actions/assets";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import AssetQRCode from "@/components/assets/AssetQRCode";
@@ -127,7 +127,7 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
                           <td className="px-4 py-3 text-gray-500">{m.fromLocation ?? "—"}</td>
                           <td className="px-4 py-3 text-gray-700">{m.toLocation}</td>
                           <td className="px-4 py-3 text-gray-900">{m.quantity}</td>
-                          <td className="px-4 py-3 text-gray-600">{m.user.name}</td>
+                          <td className="px-4 py-3 text-gray-600">{m.user?.name ?? "System"}</td>
                           <td className="px-4 py-3 text-gray-400">{formatDateTime(m.createdAt)}</td>
                         </tr>
                       ))}
@@ -142,7 +142,10 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
               <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
                 <h3 className="mb-4 font-semibold text-gray-900">Quick Actions</h3>
                 <div className="space-y-2">
-                  <Link href={`/tracking/new?assetId=${asset.id}`} className="flex w-full items-center justify-center rounded-lg bg-navy-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-700">
+                  <Link href={`/scan/${asset.id}`} className="flex w-full items-center justify-center gap-2 rounded-lg bg-navy-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-navy-700">
+                    <QrCode className="h-4 w-4" /> Scan / Quick Move
+                  </Link>
+                  <Link href={`/tracking/new?assetId=${asset.id}`} className="flex w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
                     Record Movement
                   </Link>
                   <Link href={`/assets/${asset.id}/edit`} className="flex w-full items-center justify-center rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
@@ -153,6 +156,38 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
 
               {/* QR Code for scanning */}
               <AssetQRCode assetId={asset.id} assetName={asset.name} assetCode={asset.code} />
+
+              {/* Tracking technology status */}
+              <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm space-y-3">
+                <h3 className="font-semibold text-gray-900">Tracking Tags</h3>
+
+                <div className="flex items-center justify-between rounded-lg border border-green-100 bg-green-50 px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <QrCode className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-800">QR Code</span>
+                  </div>
+                  <span className="text-xs font-semibold text-green-600">Active</span>
+                </div>
+
+                <div className={`flex items-center justify-between rounded-lg border px-3 py-2 ${asset.rfidTag ? "border-green-100 bg-green-50" : "border-gray-100 bg-gray-50"}`}>
+                  <div className="flex items-center gap-2">
+                    <Wifi className={`h-4 w-4 ${asset.rfidTag ? "text-green-600" : "text-gray-400"}`} />
+                    <span className={`text-sm font-medium ${asset.rfidTag ? "text-green-800" : "text-gray-500"}`}>RFID Tag</span>
+                  </div>
+                  {asset.rfidTag
+                    ? <span className="font-mono text-xs text-navy-700">{asset.rfidTag}</span>
+                    : <Link href={`/assets/${asset.id}/edit`} className="text-xs font-medium text-navy-600 hover:underline">Add tag →</Link>
+                  }
+                </div>
+
+                <div className="flex items-center justify-between rounded-lg border border-blue-100 bg-blue-50 px-3 py-2">
+                  <div className="flex items-center gap-2">
+                    <Barcode className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-800">Barcode</span>
+                  </div>
+                  <span className="font-mono text-xs text-blue-700">{asset.code}</span>
+                </div>
+              </div>
 
               {asset.parLevel && asset.quantity < asset.parLevel && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">

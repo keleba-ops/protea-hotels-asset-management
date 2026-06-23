@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 const LAUNDRY_TIMEOUT_HOURS = 48;
-const SYSTEM_USER_ID = "system";
 
 export async function GET(req: NextRequest) {
   const secret = req.headers.get("authorization")?.replace("Bearer ", "");
@@ -25,7 +24,6 @@ export async function GET(req: NextRequest) {
     await prisma.movement.create({
       data: {
         assetId: asset.id,
-        userId: SYSTEM_USER_ID,
         type: "LAUNDRY_IN",
         fromLocation: asset.location,
         toLocation: "Housekeeping Store",

@@ -5,7 +5,7 @@ import TopBar from "@/components/layout/TopBar";
 import Sidebar from "@/components/layout/Sidebar";
 import { STATUS_LABELS, CATEGORY_LABELS } from "@/types";
 import { formatDate } from "@/lib/utils";
-import { Package, Plus } from "lucide-react";
+import { Package, Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { demoAssets } from "@/lib/demo-data";
 
@@ -50,6 +50,18 @@ export default async function AssetsPage({
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Assets" subtitle={`${assets.length} total assets`} />
         <div className="p-6 space-y-4">
+          {/* Search bar */}
+          <form method="GET" action="/assets" className="relative">
+            {params.category && <input type="hidden" name="category" value={params.category} />}
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <input
+              name="q"
+              defaultValue={params.q ?? ""}
+              placeholder="Search assets by name…"
+              className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-navy-500 focus:outline-none focus:ring-1 focus:ring-navy-500"
+            />
+          </form>
+
           <div className="flex flex-wrap items-center gap-2">
             {(["", "LINEN", "ELECTRONIC", "CONSUMABLE"] as const).map((cat) => (
               <Link

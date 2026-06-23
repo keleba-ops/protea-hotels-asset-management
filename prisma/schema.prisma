@@ -52,7 +52,7 @@ model Asset {
 model Movement {
   id           String   @id @default(cuid())
   assetId      String
-  userId       String
+  userId       String?
   type         String
   fromLocation String?
   toLocation   String
@@ -61,7 +61,7 @@ model Movement {
   createdAt    DateTime @default(now())
 
   asset Asset @relation(fields: [assetId], references: [id])
-  user  User  @relation(fields: [userId], references: [id])
+  user  User? @relation(fields: [userId], references: [id])
 }
 
 model StockTake {
