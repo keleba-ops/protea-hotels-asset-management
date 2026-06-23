@@ -41,6 +41,7 @@ model Asset {
   cost         Float?
   imageUrl     String?
   rfidTag      String?   @unique
+  barcodeValue String?   @unique
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 

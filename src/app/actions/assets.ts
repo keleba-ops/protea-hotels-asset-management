@@ -56,10 +56,11 @@ export async function createAsset(_: unknown, formData: FormData) {
         purchaseDate: parseOptionalDate(formData.get("purchaseDate")),
         expiryDate: parseOptionalDate(formData.get("expiryDate")),
         rfidTag: (formData.get("rfidTag") as string)?.trim() || null,
+        barcodeValue: (formData.get("barcodeValue") as string)?.trim() || null,
       },
     });
   } catch (e: unknown) {
-    return { error: (e as { code?: string }).code === "P2002" ? "Asset code already in use." : "Failed to create asset." };
+    return { error: (e as { code?: string }).code === "P2002" ? "Asset code or tag already in use." : "Failed to create asset." };
   }
 
   revalidatePath("/assets");
@@ -97,6 +98,7 @@ export async function updateAsset(_: unknown, formData: FormData) {
         purchaseDate: parseOptionalDate(formData.get("purchaseDate")),
         expiryDate: parseOptionalDate(formData.get("expiryDate")),
         rfidTag: (formData.get("rfidTag") as string)?.trim() || null,
+        barcodeValue: (formData.get("barcodeValue") as string)?.trim() || null,
       },
     });
   } catch {

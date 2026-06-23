@@ -33,7 +33,13 @@ export default async function AssetsPage({
       where: {
         ...(params.category ? { category: params.category } : {}),
         ...(params.status ? { status: params.status } : {}),
-        ...(params.q ? { name: { contains: params.q } } : {}),
+        ...(params.q ? {
+          OR: [
+            { name: { contains: params.q, mode: "insensitive" as const } },
+            { code: { contains: params.q, mode: "insensitive" as const } },
+            { barcodeValue: { contains: params.q, mode: "insensitive" as const } },
+          ]
+        } : {}),
       },
       orderBy: { updatedAt: "desc" },
     });

@@ -13,7 +13,7 @@ export default async function NewMovementPage({ searchParams }: { searchParams: 
   const assets = await prisma.asset.findMany({
     where: { status: { not: "WRITTEN_OFF" } },
     orderBy: { name: "asc" },
-    select: { id: true, name: true, code: true, location: true, quantity: true, unit: true },
+    select: { id: true, name: true, code: true, location: true, quantity: true, unit: true, barcodeValue: true },
   }).catch(() => []);
 
   // Reorder so pre-selected asset is first

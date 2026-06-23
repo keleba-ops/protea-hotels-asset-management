@@ -7,7 +7,7 @@ import { MOVEMENT_TYPES, MOVEMENT_LABELS, HOTEL_LOCATIONS } from "@/types";
 import Link from "next/link";
 import { Barcode, QrCode } from "lucide-react";
 
-type AssetOption = { id: string; name: string; code: string; location: string; quantity: number; unit: string };
+type AssetOption = { id: string; name: string; code: string; location: string; quantity: number; unit: string; barcodeValue: string | null };
 
 const inputCls = "w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-navy-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-navy-500";
 const labelCls = "mb-1.5 block text-sm font-medium text-gray-700";
@@ -22,7 +22,9 @@ export default function MovementForm({ assets }: { assets: AssetOption[] }) {
   function handleCodeLookup(e: React.FormEvent) {
     e.preventDefault();
     const code = codeInput.trim().toUpperCase();
-    const match = assets.find((a) => a.code.toUpperCase() === code);
+    const match = assets.find(
+      (a) => a.code.toUpperCase() === code || a.barcodeValue?.toUpperCase() === code
+    );
     if (match) {
       setSelectedId(match.id);
       setCodeError("");

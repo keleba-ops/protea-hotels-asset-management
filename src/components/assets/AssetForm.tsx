@@ -1,17 +1,21 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { createAsset, updateAsset } from "@/app/actions/assets";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import { CATEGORIES, ASSET_STATUSES, CONDITIONS, HOTEL_LOCATIONS, STATUS_LABELS, CATEGORY_LABELS } from "@/types";
 import Link from "next/link";
+import { QrCode, Wifi, Barcode, CheckCircle2, Info } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const AssetBarcode = dynamic(() => import("@/components/assets/AssetBarcode"), { ssr: false });
 
 type AssetData = {
   id: string; name: string; code: string; category: string; subcategory: string | null;
   description: string | null; status: string; condition: string; location: string;
   quantity: number; parLevel: number | null; unit: string; supplier: string | null;
   cost: number | null; purchaseDate: Date | null; expiryDate: Date | null;
-  rfidTag: string | null;
+  rfidTag: string | null; barcodeValue: string | null;
 };
 
 const inputCls = "w-full rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 focus:border-navy-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-navy-500";
@@ -30,6 +34,23 @@ export default function AssetForm({ asset }: { asset?: AssetData | null }) {
   const isEdit = !!asset;
   const action = isEdit ? updateAsset : createAsset;
   const [state, formAction] = useActionState(action, null);
+  const [rfidVal, setRfidVal] = useState(asset?.rfidTag ?? "");
+  const [barcodeVal, setBarcodeVal] = useState(asset?.barcodeValue ?? "");
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+
+  const scanUrl = isEdit
+    ? (typeof window !== "undefined" ? window.location.origin : "https://mariot-assets.vercel.app") + `/scan/${asset.id}`
+    : null;
+
+  useEffect(() => {
+    if (!scanUrl) return;
+    import("qrcode").then((QRCode) => {
+      QRCode.toDataURL(scanUrl, {
+        width: 140, margin: 1,
+        color: { dark: "#1B3464", light: "#ffffff" },
+      }).then(setQrDataUrl);
+    });
+  }, [scanUrl]);
 
   const fmt = (d: Date | null) => d ? new Date(d).toISOString().split("T")[0] : "";
 
@@ -113,12 +134,110 @@ export default function AssetForm({ asset }: { asset?: AssetData | null }) {
       </div>
 
       {/* Tracking */}
-      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm space-y-4">
-        <h2 className="font-semibold text-gray-900">Tracking</h2>
-        <Field label="RFID Tag ID">
-          <input name="rfidTag" defaultValue={asset?.rfidTag ?? ""} placeholder="e.g. E2001234560000001234ABCD" className={inputCls} />
-        </Field>
-        <p className="text-xs text-gray-400">Optional — used for automatic movement logging when asset passes an RFID checkpoint.</p>
+      <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm space-y-5">
+        <div className="flex items-center gap-2">
+          <h2 className="font-semibold text-gray-900">Tracking Tags</h2>
+          <span className="text-xs text-gray-400">— assign one or more tracking methods to this asset</span>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+
+          {/* QR Code */}
+          <div className="rounded-xl border border-green-100 bg-green-50 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <QrCode className="h-4 w-4 text-green-600" />
+              <span className="text-sm font-semibold text-green-800">QR Code</span>
+              <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700">
+                <CheckCircle2 className="h-3 w-3" /> Auto
+              </span>
+            </div>
+            {isEdit && qrDataUrl ? (
+              <div className="flex flex-col items-center gap-2">
+                <img src={qrDataUrl} alt="QR Code" className="h-28 w-28 rounded-lg bg-white p-1 shadow-sm" />
+                <p className="text-center text-xs text-green-700 font-mono break-all">{scanUrl}</p>
+              </div>
+            ) : (
+              <div className="flex h-28 flex-col items-center justify-center gap-2 rounded-lg bg-white/60">
+                <QrCode className="h-8 w-8 text-green-300" />
+                <p className="text-center text-xs text-green-600">Generated automatically when asset is saved</p>
+              </div>
+            )}
+            <div className="flex items-start gap-2 rounded-lg bg-white/60 px-3 py-2">
+              <Info className="h-3.5 w-3.5 shrink-0 text-green-600 mt-0.5" />
+              <p className="text-xs text-green-700">No setup required. Print the label from the asset detail page.</p>
+            </div>
+          </div>
+
+          {/* RFID */}
+          <div className={`rounded-xl border p-4 space-y-3 ${rfidVal ? "border-navy-100 bg-navy-50" : "border-gray-100 bg-gray-50"}`}>
+            <div className="flex items-center gap-2">
+              <Wifi className={`h-4 w-4 ${rfidVal ? "text-navy-600" : "text-gray-400"}`} />
+              <span className={`text-sm font-semibold ${rfidVal ? "text-navy-800" : "text-gray-600"}`}>RFID Tag</span>
+              {rfidVal && (
+                <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-navy-100 px-2 py-0.5 text-xs font-semibold text-navy-700">
+                  <CheckCircle2 className="h-3 w-3" /> Set
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-gray-600">Tag ID</label>
+              <input
+                name="rfidTag"
+                value={rfidVal}
+                onChange={(e) => setRfidVal(e.target.value)}
+                placeholder="e.g. E2001234560000001234ABCD"
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 focus:border-navy-500 focus:outline-none focus:ring-1 focus:ring-navy-500"
+              />
+            </div>
+            {rfidVal ? (
+              <div className="rounded-lg bg-navy-100 px-3 py-2">
+                <p className="text-xs font-mono text-navy-800 break-all">{rfidVal}</p>
+              </div>
+            ) : (
+              <div className="flex h-12 items-center justify-center rounded-lg bg-white/60">
+                <p className="text-xs text-gray-400">Enter RFID tag ID above</p>
+              </div>
+            )}
+            <div className="flex items-start gap-2 rounded-lg bg-white/60 px-3 py-2">
+              <Info className="h-3.5 w-3.5 shrink-0 text-gray-500 mt-0.5" />
+              <p className="text-xs text-gray-500">Auto-logs movement when asset passes a reader checkpoint.</p>
+            </div>
+          </div>
+
+          {/* Barcode */}
+          <div className={`rounded-xl border p-4 space-y-3 ${barcodeVal ? "border-blue-100 bg-blue-50" : "border-gray-100 bg-gray-50"}`}>
+            <div className="flex items-center gap-2">
+              <Barcode className={`h-4 w-4 ${barcodeVal ? "text-blue-600" : "text-gray-400"}`} />
+              <span className={`text-sm font-semibold ${barcodeVal ? "text-blue-800" : "text-gray-600"}`}>Barcode</span>
+              {barcodeVal && (
+                <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                  <CheckCircle2 className="h-3 w-3" /> Set
+                </span>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-gray-600">Barcode value</label>
+              <input
+                name="barcodeValue"
+                value={barcodeVal}
+                onChange={(e) => setBarcodeVal(e.target.value)}
+                placeholder={`e.g. ${asset?.code ?? "LN-A3X7K2"}`}
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 font-mono text-xs text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+            </div>
+            <div className="rounded-lg bg-white p-2 min-h-[3.5rem] flex items-center justify-center">
+              {barcodeVal
+                ? <AssetBarcode value={barcodeVal} height={44} />
+                : <p className="text-xs text-gray-400">Live preview appears here</p>
+              }
+            </div>
+            <div className="flex items-start gap-2 rounded-lg bg-white/60 px-3 py-2">
+              <Info className="h-3.5 w-3.5 shrink-0 text-gray-500 mt-0.5" />
+              <p className="text-xs text-gray-500">Scan with USB/BT barcode scanner on the movement form or asset search.</p>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* Dates */}

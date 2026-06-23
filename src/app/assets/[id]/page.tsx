@@ -11,6 +11,7 @@ import { Pencil, ArrowLeft, QrCode, Wifi, Barcode } from "lucide-react";
 import { deleteAsset } from "@/app/actions/assets";
 import { SubmitButton } from "@/components/ui/SubmitButton";
 import AssetQRCode from "@/components/assets/AssetQRCode";
+import AssetBarcode from "@/components/assets/AssetBarcode";
 
 const statusColors: Record<string, string> = {
   AVAILABLE: "bg-green-100 text-green-700",
@@ -154,39 +155,50 @@ export default async function AssetDetailPage({ params }: { params: Promise<{ id
                 </div>
               </div>
 
-              {/* QR Code for scanning */}
+              {/* QR Code */}
               <AssetQRCode assetId={asset.id} assetName={asset.name} assetCode={asset.code} />
 
-              {/* Tracking technology status */}
-              <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm space-y-3">
-                <h3 className="font-semibold text-gray-900">Tracking Tags</h3>
-
-                <div className="flex items-center justify-between rounded-lg border border-green-100 bg-green-50 px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <QrCode className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">QR Code</span>
-                  </div>
-                  <span className="text-xs font-semibold text-green-600">Active</span>
-                </div>
-
-                <div className={`flex items-center justify-between rounded-lg border px-3 py-2 ${asset.rfidTag ? "border-green-100 bg-green-50" : "border-gray-100 bg-gray-50"}`}>
-                  <div className="flex items-center gap-2">
-                    <Wifi className={`h-4 w-4 ${asset.rfidTag ? "text-green-600" : "text-gray-400"}`} />
-                    <span className={`text-sm font-medium ${asset.rfidTag ? "text-green-800" : "text-gray-500"}`}>RFID Tag</span>
-                  </div>
+              {/* RFID Tag */}
+              <div className={`rounded-xl border p-5 shadow-sm space-y-3 ${asset.rfidTag ? "border-navy-100 bg-navy-50" : "border-gray-100 bg-white"}`}>
+                <div className="flex items-center gap-2">
+                  <Wifi className={`h-4 w-4 ${asset.rfidTag ? "text-navy-600" : "text-gray-400"}`} />
+                  <h3 className={`font-semibold ${asset.rfidTag ? "text-navy-800" : "text-gray-500"}`}>RFID Tag</h3>
                   {asset.rfidTag
-                    ? <span className="font-mono text-xs text-navy-700">{asset.rfidTag}</span>
-                    : <Link href={`/assets/${asset.id}/edit`} className="text-xs font-medium text-navy-600 hover:underline">Add tag →</Link>
-                  }
+                    ? <span className="ml-auto text-xs font-semibold text-navy-600">Active</span>
+                    : <span className="ml-auto text-xs text-gray-400">Not assigned</span>}
                 </div>
-
-                <div className="flex items-center justify-between rounded-lg border border-blue-100 bg-blue-50 px-3 py-2">
-                  <div className="flex items-center gap-2">
-                    <Barcode className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-medium text-blue-800">Barcode</span>
+                {asset.rfidTag ? (
+                  <div className="rounded-lg bg-white px-3 py-2 font-mono text-xs text-navy-800 break-all border border-navy-100">
+                    {asset.rfidTag}
                   </div>
-                  <span className="font-mono text-xs text-blue-700">{asset.code}</span>
+                ) : (
+                  <Link href={`/assets/${asset.id}/edit`} className="block text-center text-xs font-medium text-navy-600 hover:underline">
+                    + Assign RFID tag
+                  </Link>
+                )}
+              </div>
+
+              {/* Barcode */}
+              <div className={`rounded-xl border p-5 shadow-sm space-y-3 ${(asset.barcodeValue ?? asset.code) ? "border-blue-100 bg-blue-50" : "border-gray-100 bg-white"}`}>
+                <div className="flex items-center gap-2">
+                  <Barcode className="h-4 w-4 text-blue-600" />
+                  <h3 className="font-semibold text-blue-800">Barcode</h3>
+                  <span className="ml-auto text-xs font-semibold text-blue-600">Active</span>
                 </div>
+                <div className="rounded-lg bg-white p-2">
+                  <AssetBarcode
+                    value={asset.barcodeValue ?? asset.code}
+                    height={52}
+                    showPrint
+                    assetName={asset.name}
+                    assetCode={asset.code}
+                  />
+                </div>
+                {!asset.barcodeValue && (
+                  <p className="text-xs text-blue-600 text-center">
+                    Using asset code · <Link href={`/assets/${asset.id}/edit`} className="underline">Set custom barcode</Link>
+                  </p>
+                )}
               </div>
 
               {asset.parLevel && asset.quantity < asset.parLevel && (
