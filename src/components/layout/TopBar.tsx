@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, Search } from "lucide-react";
+import Link from "next/link";
 
 interface TopBarProps {
   title: string;
@@ -23,10 +24,10 @@ export default function TopBar({ title, subtitle }: TopBarProps) {
             className="h-9 rounded-lg border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-navy-500 focus:outline-none focus:ring-1 focus:ring-navy-500"
           />
         </div>
-        <button className="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100">
+        <Link href="/alerts" className="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100">
           <Bell className="h-5 w-5" />
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-red-500" />
-        </button>
+        </Link>
       </div>
     </header>
   );

@@ -6,6 +6,7 @@ import TopBar from "@/components/layout/TopBar";
 import { CATEGORY_LABELS, STATUS_LABELS, MOVEMENT_LABELS } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { Package, AlertTriangle, ArrowLeftRight, TrendingDown, Download } from "lucide-react";
+import PrintReportButton from "@/components/reports/PrintReportButton";
 
 function Section({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
   return (
@@ -57,15 +58,42 @@ export default async function ReportsPage() {
   const lowStock = assets.filter((a) => a.parLevel && a.quantity < a.parLevel);
   const lostAssets = assets.filter((a) => a.status === "LOST");
 
+  const printedAt = new Date().toLocaleString("en-BW", { dateStyle: "long", timeStyle: "short" });
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">
+      <style>{`
+        @media print {
+          /* hide chrome */
+          nav, header, aside, [data-sidebar], .no-print { display: none !important; }
+          body, html { overflow: visible !important; background: white !important; }
+          main { overflow: visible !important; height: auto !important; }
+          .flex.h-screen { display: block !important; height: auto !important; overflow: visible !important; }
+          /* ensure content fills page */
+          main > div { padding: 24px !important; }
+          /* keep tables readable */
+          table { page-break-inside: auto; }
+          tr { page-break-inside: avoid; }
+          section { page-break-inside: avoid; margin-bottom: 24px; }
+          /* print header */
+          .print-header { display: block !important; }
+        }
+        .print-header { display: none; }
+      `}</style>
       <Sidebar />
       <main className="flex flex-1 flex-col overflow-y-auto">
         <TopBar title="Reports" subtitle="Inventory summary and activity analytics" />
+
+        {/* Print-only header */}
+        <div className="print-header px-6 pt-6 pb-2 border-b border-gray-200">
+          <h1 className="text-xl font-bold text-navy-900">Protea Hotels by Marriott — Asset Report</h1>
+          <p className="text-sm text-gray-500">Generated: {printedAt}</p>
+        </div>
+
         <div className="p-6 space-y-8">
 
           {/* Export buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 no-print">
             <span className="text-sm font-medium text-gray-500">Export:</span>
             <a
               href="/api/reports/export?type=assets"
@@ -79,6 +107,7 @@ export default async function ReportsPage() {
             >
               <Download className="h-3.5 w-3.5" /> Movements CSV
             </a>
+            <PrintReportButton />
           </div>
 
           {/* Summary cards */}
